@@ -1,0 +1,27 @@
+version: "3.7"
+
+services:
+  cosmosdb:
+    image: mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator:latest
+    container_name: cosmosdb
+    tty: true
+    #mem_limit: 4G
+    environment:
+      - AZURE_COSMOS_EMULATOR_PARTITION_COUNT=4
+      - AZURE_COSMOS_EMULATOR_ENABLE_DATA_PERSISTENCE=true
+      - AZURE_COSMOS_EMULATOR_IP_ADDRESS_OVERRIDE=127.0.0.1
+    ports:
+      - '1234:1234'  # Data Explorer
+      - '8081:8081'
+      - '10250:10250'
+      - '10251:10251'
+      - '10252:10252'
+      - '10253:10253'
+      - '10254:10254'
+      - '10255:10255'
+    restart: unless-stopped
+    volumes:
+      - vol_cosmos:/tmp/cosmos/appdata
+
+volumes:
+  vol_cosmos:

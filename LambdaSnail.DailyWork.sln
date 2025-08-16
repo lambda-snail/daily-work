@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server", "Server\Server.csproj", "{81D2C4DF-EE62-4EE0-838A-D00F1C9D4B55}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{0DBB3855-49EA-4172-A9CE-F667DE14564B}"
+	ProjectSection(SolutionItems) = preProject
+		Infrastructure\main.bicep = Infrastructure\main.bicep
+		Infrastructure\common.bicep = Infrastructure\common.bicep
+		Infrastructure\resources.bicep = Infrastructure\resources.bicep
+		Infrastructure\identity.bicep = Infrastructure\identity.bicep
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{F60FA7D2-3949-45B7-B40D-D907FD1781BE}"
+	ProjectSection(SolutionItems) = preProject
+		Tools\docker-compose.yml = Tools\docker-compose.yml
+		.gitignore = .gitignore
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{81D2C4DF-EE62-4EE0-838A-D00F1C9D4B55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81D2C4DF-EE62-4EE0-838A-D00F1C9D4B55}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81D2C4DF-EE62-4EE0-838A-D00F1C9D4B55}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81D2C4DF-EE62-4EE0-838A-D00F1C9D4B55}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
