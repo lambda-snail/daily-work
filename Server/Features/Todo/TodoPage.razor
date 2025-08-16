@@ -1,14 +1,42 @@
 @page "/todos"
 
-
 @using Microsoft.FluentUI.AspNetCore.Components
+@using Server.Components.Components
 
 <h3>Todo Page</h3>
 
-<FluentGrid Justify="JustifyContent.FlexStart" Spacing="3">
-    <FluentGridItem xs="12" sm="6">
-        <FluentSortableList Items="_items" OnUpdate="@SortList">
-            <ItemTemplate>@context.Name</ItemTemplate>
-        </FluentSortableList>
-    </FluentGridItem>
-</FluentGrid>
+<FluentStack HorizontalAlignment="HorizontalAlignment.Stretch">
+    
+    <FluentCard Width="400px">
+        <h4>Todo</h4>
+        <p> <InlineEditableText Mode="InlineEditableText.InputMode.TextArea" Value="Just some content in a card (with a button that does not do anything)." ></InlineEditableText></p>
+
+        <FluentGrid Justify="JustifyContent.FlexStart" Spacing="3">
+            <FluentGridItem xs="12">
+                <FluentSortableList Items="_items" OnUpdate="@SortList">
+                    <ItemTemplate>
+                    
+                        <FluentCheckbox></FluentCheckbox>
+                        <InlineEditableText Mode="InlineEditableText.InputMode.TextField" Value="@context.Name"></InlineEditableText>
+
+                    </ItemTemplate>
+                </FluentSortableList>
+            </FluentGridItem>
+        </FluentGrid>
+
+    </FluentCard>
+    
+    <FluentGrid Justify="JustifyContent.FlexStart" Spacing="3" Style="width: 50%">
+        <FluentGridItem xs="12">
+            <FluentSortableList Items="_items" OnUpdate="@SortList">
+                <ItemTemplate>
+                    @context.Name
+                    <FluentSpacer />
+                    <FluentBadge Appearance="Appearance.Accent">New</FluentBadge>
+                    @DateOnly.FromDateTime(DateTime.Now)
+                </ItemTemplate>
+            </FluentSortableList>
+        </FluentGridItem>
+    </FluentGrid>    
+    
+</FluentStack>

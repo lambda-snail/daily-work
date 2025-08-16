@@ -1,0 +1,35 @@
+<span @ondblclick="OnDoubleClick">
+
+    @if (_editMode)
+    {
+        <EditForm Model="@_value" OnValidSubmit="@HandleValidSubmit" FormName="text_form" novalidate>
+            <FluentStack Orientation="Orientation.Horizontal">
+                @if (Mode == InputMode.TextField)
+                {
+                    <FluentTextField @bind-Value="_value.Text" Style="width: 100%"/>
+                }
+                else
+                {
+                    <FluentTextArea @bind-Value="_value.Text" Style="width: 100%"/>
+                }
+
+                <FluentButton
+                    Type="ButtonType.Reset"
+                    OnClick="CancelEditing"
+                    Appearance="Appearance.Lightweight"
+                    IconEnd="@(new Icons.Regular.Size16.Delete())">
+                </FluentButton>
+                <FluentButton
+                    Type="ButtonType.Submit"
+                    Appearance="Appearance.Accent"
+                    IconEnd="@(new Icons.Regular.Size16.Save())">
+            </FluentButton>
+            </FluentStack>
+        </EditForm>
+    }
+    else
+    {
+        @Value
+    }
+
+</span>

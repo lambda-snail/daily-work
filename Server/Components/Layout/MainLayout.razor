@@ -8,12 +8,16 @@
     <FluentStack Class="main" Orientation="Orientation.Horizontal" Width="100%">
         <NavMenu />
         <FluentBodyContent Class="body-content">
-            <FluentMessageBarProvider Section="MESSAGES_TOP"/>
+           
             <div class="content">
                 @Body
             </div>
-            <FluentDialogProvider />
             <FluentToastProvider MaxToastCount="10" />
+            <FluentDialogProvider />
+            <FluentTooltipProvider />
+            <FluentMessageBarProvider Section="MESSAGES_TOP"/>
+            <FluentMenuProvider />
+            
         </FluentBodyContent>
     </FluentStack>
     <FluentFooter>
