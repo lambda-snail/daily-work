@@ -16,7 +16,6 @@ public class Item
     public bool Disabled { get; set; } = false;
 }
 
-[RenderModeInteractiveServer]
 public partial class TodoPage : ComponentBase
 {
     private readonly TodoRepository _todoRepository;

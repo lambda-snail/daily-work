@@ -10,7 +10,6 @@ namespace Server.Components.Components;
 /// <summary>
 /// A container for text that turns into an editable field or area when double-clicked.
 /// </summary>
-[RenderModeInteractiveServer]
 public partial class InlineEditableText: ComponentBase
 {
     public enum InputMode
