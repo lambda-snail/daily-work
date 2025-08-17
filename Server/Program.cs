@@ -1,5 +1,7 @@
 using Azure.Identity;
+using Dapper;
 using Microsoft.FluentUI.AspNetCore.Components;
+using Server.Common.Dapper;
 using Server.Common.Settings;
 using Server.Components;
 using Server.Features.Todo;
@@ -41,6 +43,9 @@ else
 
 builder.Services.Configure<DatabaseSettings>(builder.Configuration.GetSection("Tasks:Database"));
 builder.Services.AddScoped<TodoRepository>();
+
+SqlMapper.AddTypeHandler(new DapperSqlDateOnlyTypeHandler());
+SqlMapper.AddTypeHandler(new DapperSqlTimeOnlyTypeHandler());
 
 // Add services to the container.
 builder.Services.AddRazorComponents()

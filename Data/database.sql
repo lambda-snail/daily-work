@@ -16,6 +16,8 @@ create table [Todo] (
     Title nvarchar(128) not null,
     Description nvarchar(4000) null,
     Owner int not null,
+    Date date not null default GETDATE(),
+    LastUpdated datetime not null default CURRENT_TIMESTAMP,
     constraint FK_Owner foreign key ([Owner]) references [User]([UserId])
     );
 

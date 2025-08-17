@@ -99,10 +99,12 @@ public partial class TodoPage : ComponentBase
     private async Task CheckboxValueChanged(bool value, int itemId)
     {
         var item = CurrentTodo?.Items.Where(i => i.Id == itemId)?.FirstOrDefault();
+     
+        ArgumentNullException.ThrowIfNull(CurrentTodo);
         ArgumentNullException.ThrowIfNull(item);
         
         item.IsDone = value;
-        await _todoRepository.UpdateTodoItem(item);
+        await _todoRepository.UpdateTodoItem(item, CurrentTodo);
     }
 
     private async Task AddItemToCurrentTodo()
@@ -118,5 +120,20 @@ public partial class TodoPage : ComponentBase
         item = await _todoRepository.CreateTodoItem(item);
         CurrentTodo.Items.Add(item);
         StateHasChanged();
+    }
+
+    private string GetDateTimeDescriptionString(DateTime dt)
+    {
+        var timePassed = DateTime.Now - dt;
+        return timePassed switch
+        {
+            { TotalSeconds: < 60 } => $"{(int)timePassed.TotalSeconds} seconds ago",
+            { TotalMinutes: < 30 } => $"{(int)timePassed.TotalMinutes} minutes ago",
+            { TotalMinutes: >= 30 and < 90 } => $"about an hour ago",
+            { TotalHours: < 6 } => $"{(int)timePassed.TotalHours} hours ago",
+            { TotalDays: 1 } => $"one day ago",
+            { TotalDays: < 7 } => $"{(int)timePassed.TotalDays} days ago",
+            _ => dt.ToString("yyyy-MM-dd HH:mm")
+        };
     }
 }

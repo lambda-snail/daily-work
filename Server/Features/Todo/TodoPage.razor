@@ -43,13 +43,17 @@
     @* <FluentCheckbox @bind-Value=check1>Checkbox</FluentCheckbox> *@
 </FluentToolbar>
 
-<FluentStack HorizontalAlignment="HorizontalAlignment.Stretch">
+<FluentStack HorizontalAlignment="HorizontalAlignment.Center">
     
-    <FluentCard Width="400px">
+    <FluentCard Width="50%">
         
         @if (CurrentTodo is not null)
         {
-            <h4>@CurrentTodo?.Title</h4>
+            <FluentStack Orientation="Orientation.Horizontal" HorizontalAlignment="HorizontalAlignment.SpaceBetween">
+                <h4>@CurrentTodo?.Title</h4>
+                <FluentBadge Appearance="Appearance.Lightweight">@GetDateTimeDescriptionString(CurrentTodo!.LastUpdated)</FluentBadge>
+            </FluentStack>
+            
             <p> <InlineEditableText Mode="InlineEditableText.InputMode.TextArea" @bind-Value="@CurrentTodo!.Description" ></InlineEditableText></p>
             
             <FluentGrid Justify="JustifyContent.FlexStart" Spacing="3">
@@ -57,12 +61,8 @@
                     <FluentSortableList @ref="_itemList" Items="@CurrentTodo!.Items" OnUpdate="@SortList">
                         <ItemTemplate>
                             <FluentStack @key="@context.Id" Orientation="Orientation.Horizontal">
-                                <FluentCheckbox Value="@context.IsDone" ValueChanged="@(value => CheckboxValueChanged(value, context.Id))">
-                                    @* onchange="@(() => _todoRepository.UpdateTodoItem(@context))" *@
-                                    @* @bind-Value="@context.IsDone"> *@
-                                    
-                                </FluentCheckbox>
-                                <InlineEditableText ChangesSaved="@(() => _todoRepository.UpdateTodoItem(@context))" Mode="InlineEditableText.InputMode.TextField" @bind-Value="@context.Text"></InlineEditableText>
+                                <FluentCheckbox Value="@context.IsDone" ValueChanged="@(value => CheckboxValueChanged(value, context.Id))" />
+                                <InlineEditableText ChangesSaved="@(() => _todoRepository.UpdateTodoItem(@context, CurrentTodo))" Mode="InlineEditableText.InputMode.TextField" @bind-Value="@context.Text" />
                             </FluentStack>
                         </ItemTemplate>
                     </FluentSortableList>
@@ -94,7 +94,7 @@
                         }
                         <FluentSpacer/>
                         <FluentBadge Appearance="Appearance.Accent">New</FluentBadge>
-                        @DateOnly.FromDateTime(DateTime.Now)
+                        @context.Date
                     </FluentStack>
                 </ItemTemplate>
             </FluentSortableList>
