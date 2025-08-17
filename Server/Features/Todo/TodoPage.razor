@@ -47,14 +47,14 @@
     
     <FluentCard Width="400px">
         
-        @if (_currentTodo is not null)
+        @if (CurrentTodo is not null)
         {
-            <h4>@_currentTodo?.Title</h4>
-            <p> <InlineEditableText Mode="InlineEditableText.InputMode.TextArea" @bind-Value="@_currentTodo!.Description" ></InlineEditableText></p>
+            <h4>@CurrentTodo?.Title</h4>
+            <p> <InlineEditableText Mode="InlineEditableText.InputMode.TextArea" @bind-Value="@CurrentTodo!.Description" ></InlineEditableText></p>
             
             <FluentGrid Justify="JustifyContent.FlexStart" Spacing="3">
                 <FluentGridItem xs="12">
-                    <FluentSortableList @ref="_itemList" Items="@_currentTodoItems" OnUpdate="@SortList">
+                    <FluentSortableList @ref="_itemList" Items="@CurrentTodo!.Items" OnUpdate="@SortList">
                         <ItemTemplate>
                             <FluentStack @key="@context.Id" Orientation="Orientation.Horizontal">
                                 <FluentCheckbox Value="@context.IsDone" ValueChanged="@(value => CheckboxValueChanged(value, context.Id))">
@@ -68,6 +68,12 @@
                     </FluentSortableList>
                 </FluentGridItem>
             </FluentGrid>
+            
+            <FluentButton
+                Appearance="Appearance.Lightweight"
+                OnClick="AddItemToCurrentTodo"
+                IconStart="@(new Microsoft.FluentUI.AspNetCore.Components.Icons.Regular.Size16.AddSquare())">
+            </FluentButton>
         }
         else
         {
@@ -82,7 +88,7 @@
                 <ItemTemplate>
                     <FluentStack  Orientation="Orientation.Horizontal" onclick="@(() => SetCurrentTodo(@context))">
                         @context.Title
-                        @if (context.Id == _currentTodo?.Id)
+                        @if (context.Id == CurrentTodo?.Id)
                         {
                             <FluentBadge Appearance="Appearance.Neutral">Current</FluentBadge>
                         }

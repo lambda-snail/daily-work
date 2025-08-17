@@ -22,8 +22,7 @@ public partial class TodoPage : ComponentBase
     private readonly TodoRepository _todoRepository;
     
     private List<Todo> _items = new();
-    private Todo? _currentTodo { get; set; } = null;
-    private List<TodoItem> _currentTodoItems { get; set; }  = Enumerable.Empty<TodoItem>().ToList();
+    private Todo? CurrentTodo { get; set; } = null;
     
     private FluentSortableList<TodoItem> _itemList;
 
@@ -65,10 +64,9 @@ public partial class TodoPage : ComponentBase
 
     private void SetCurrentTodo(Todo todo)
     {
-        if (_currentTodo != todo)
+        if (CurrentTodo != todo)
         {
-            _currentTodo = todo;
-            _currentTodoItems = todo.Items;
+            CurrentTodo = todo;
             StateHasChanged();
         }
     }
@@ -100,10 +98,25 @@ public partial class TodoPage : ComponentBase
     /// </summary>
     private async Task CheckboxValueChanged(bool value, int itemId)
     {
-        var item = _currentTodo?.Items.Where(i => i.Id == itemId)?.FirstOrDefault();
+        var item = CurrentTodo?.Items.Where(i => i.Id == itemId)?.FirstOrDefault();
         ArgumentNullException.ThrowIfNull(item);
         
         item.IsDone = value;
         await _todoRepository.UpdateTodoItem(item);
+    }
+
+    private async Task AddItemToCurrentTodo()
+    {
+        ArgumentNullException.ThrowIfNull(CurrentTodo);
+
+        var item = new TodoItem
+        {
+            Text = "Describe your task or goal",
+            ParentTodo = CurrentTodo.Id
+        };
+        
+        item = await _todoRepository.CreateTodoItem(item);
+        CurrentTodo.Items.Add(item);
+        StateHasChanged();
     }
 }
