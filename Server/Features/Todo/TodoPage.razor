@@ -1,9 +1,49 @@
 @page "/todos"
 
 @using Microsoft.FluentUI.AspNetCore.Components
+@using Microsoft.FluentUI.AspNetCore.Components.Icons.Filled
 @using Server.Components.Components
 
-<h3>Todo Page</h3>
+
+
+<FluentToolbar id="todo-toolbar" Style="width: 100%">
+    <label slot="label">Manage Todos</label>
+    <FluentButton
+        Appearance="Appearance.Accent"
+        OnClick="AddTodo"
+        IconStart="@(new Microsoft.FluentUI.AspNetCore.Components.Icons.Regular.Size20.AddSquare())">
+        New
+    </FluentButton>
+    
+    <FluentButton
+        Appearance="Appearance.Lightweight"
+        IconStart="@(new Microsoft.FluentUI.AspNetCore.Components.Icons.Regular.Size20.Delete())">
+        Remove
+    </FluentButton>
+    
+    <FluentTextField slot="end" Placeholder="Search"></FluentTextField>
+    <FluentIcon slot="end" Value="@(new Microsoft.FluentUI.AspNetCore.Components.Icons.Regular.Size20.Globe())"
+        Icon="@(Microsoft.FluentUI.AspNetCore.Components.Icons.Regular.Size20.Globe)" />
+    
+    
+    @* <FluentRadioGroup @bind-Value=value1> *@
+    @*     <FluentRadio Value=@("one") Checked="true">One</FluentRadio> *@
+    @*     <FluentRadio Value=@("two")>Two</FluentRadio> *@
+    @*     <FluentRadio Value=@("three")>Three</FluentRadio> *@
+    @* </FluentRadioGroup> *@
+    @* <FluentMenuButton @ref=menubutton Text="Select brand color" Items="@items" OnMenuChanged="HandleOnMenuChanged"></FluentMenuButton> *@
+    @* *@
+    @* <FluentButton>Button</FluentButton> *@
+    @* *@
+    @* <FluentInputLabel ForId="s1" Orientation="Orientation.Horizontal">Select something</FluentInputLabel> *@
+    @* <FluentSelect Id="s1" Class="below outline" @bind-Value="@comboboxValue" TOption="string"> *@
+    @*     <FluentOption id="option-15">Option 1</FluentOption> *@
+    @*     <FluentOption id="option-16">Second option</FluentOption> *@
+    @*     <FluentOption id="option-17">Option 3</FluentOption> *@
+    @* </FluentSelect> *@
+    @* *@
+    @* <FluentCheckbox @bind-Value=check1>Checkbox</FluentCheckbox> *@
+</FluentToolbar>
 
 <FluentStack HorizontalAlignment="HorizontalAlignment.Stretch">
     

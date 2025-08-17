@@ -1,12 +1,8 @@
-using Azure.Core;
 using Azure.Identity;
-using Microsoft.Azure.Cosmos;
-using Microsoft.Azure.Cosmos.Fluent;
-using Microsoft.Extensions.Configuration.AzureAppConfiguration;
-using Microsoft.Extensions.Options;
 using Microsoft.FluentUI.AspNetCore.Components;
 using Server.Common.Settings;
 using Server.Components;
+using Server.Features.Todo;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,15 +39,8 @@ else
      );
 }
 
-builder.Services.Configure<DatabaseSettings>(builder.Configuration.GetSection("Tasks:Database:"));
-
-builder.Services.AddSingleton<CosmosClient>(s =>
-{
-    var settings = s.GetService<IOptions<DatabaseSettings>>();
-    ArgumentNullException.ThrowIfNull(settings?.Value);
-    return new CosmosClientBuilder(settings.Value.ConnectionString).Build();
-});
-
+builder.Services.Configure<DatabaseSettings>(builder.Configuration.GetSection("Tasks:Database"));
+builder.Services.AddScoped<TodoRepository>();
 
 // Add services to the container.
 builder.Services.AddRazorComponents()

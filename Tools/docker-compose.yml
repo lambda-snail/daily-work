@@ -1,27 +1,21 @@
 version: "3.7"
 
+# https://hub.docker.com/_/microsoft-mssql-server
+# https://docs.microsoft.com/en-us/sql/linux/quickstart-install-connect-docker?view=sql-server-ver15&pivots=cs1-bash
+         
 services:
-  cosmosdb:
-    image: mcr.microsoft.com/cosmosdb/linux/azure-cosmos-emulator:latest
-    container_name: cosmosdb
-    tty: true
-    #mem_limit: 4G
-    environment:
-      - AZURE_COSMOS_EMULATOR_PARTITION_COUNT=4
-      - AZURE_COSMOS_EMULATOR_ENABLE_DATA_PERSISTENCE=true
-      - AZURE_COSMOS_EMULATOR_IP_ADDRESS_OVERRIDE=127.0.0.1
-    ports:
-      - '1234:1234'  # Data Explorer
-      - '8081:8081'
-      - '10250:10250'
-      - '10251:10251'
-      - '10252:10252'
-      - '10253:10253'
-      - '10254:10254'
-      - '10255:10255'
-    restart: unless-stopped
-    volumes:
-      - vol_cosmos:/tmp/cosmos/appdata
-
+ sqlserver:
+   image: mcr.microsoft.com/mssql/server:2025-latest
+   restart: always
+   hostname: 'dailywork'
+   ports:
+     - '1433:1433'
+   environment:
+     # Username is 'SA'
+     SA_PASSWORD: 'Admin1234'
+     ACCEPT_EULA: 'Y'
+     name: 'dailywork'
+   volumes:
+     - sqlserver:/var/opt/mssql
 volumes:
-  vol_cosmos:
+ sqlserver:

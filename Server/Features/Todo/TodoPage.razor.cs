@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.Extensions.Options;
 using Microsoft.FluentUI.AspNetCore.Components;
 using Server.Common;
+using Server.Common.Settings;
 
 namespace Server.Features.Todo;
 
@@ -16,7 +18,14 @@ public class Item
 [RenderModeInteractiveServer]
 public partial class TodoPage : ComponentBase
 {
-    public List<Item> _items = Enumerable.Range(1, 10).Select(i => new Item { Id = i, Name = $"Item {i}" }).ToList();
+    private readonly TodoRepository _todoRepository;
+    private List<Item> _items = Enumerable.Range(1, 10).Select(i => new Item { Id = i, Name = $"Item {i}" }).ToList();
+    
+
+    public TodoPage(TodoRepository todoRepository)
+    {
+        _todoRepository = todoRepository;
+    }
     
     private void SortList(FluentSortableListEventArgs args)
     {
@@ -40,5 +49,17 @@ public partial class TodoPage : ComponentBase
         {
             items.Add(itemToMove);
         }
+    }
+
+    private async Task AddTodo()
+    {
+        var todo = new Todo
+        {
+            Title = "New Todo",
+            Description = "Describe your TODO here",
+            Owner = 1
+        };
+        
+        await _todoRepository.CreateTodo(todo);
     }
 }
