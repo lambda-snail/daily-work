@@ -4,8 +4,6 @@
 @using Microsoft.FluentUI.AspNetCore.Components.Icons.Filled
 @using Server.Components.Components
 
-
-
 <FluentToolbar id="todo-toolbar" Style="width: 100%">
     <label slot="label">Manage Todos</label>
     <FluentButton
@@ -48,32 +46,46 @@
 <FluentStack HorizontalAlignment="HorizontalAlignment.Stretch">
     
     <FluentCard Width="400px">
-        <h4>Todo</h4>
-        <p> <InlineEditableText Mode="InlineEditableText.InputMode.TextArea" Value="Just some content in a card (with a button that does not do anything)." ></InlineEditableText></p>
+        
+        @if (_currentTodo is not null)
+        {
+            <h4>@_currentTodo?.Title</h4>
+            <p> <InlineEditableText Mode="InlineEditableText.InputMode.TextArea" @bind-Value="@_currentTodo!.Description" ></InlineEditableText></p>
 
-        <FluentGrid Justify="JustifyContent.FlexStart" Spacing="3">
-            <FluentGridItem xs="12">
-                <FluentSortableList Items="_items" OnUpdate="@SortList">
-                    <ItemTemplate>
+            <FluentGrid Justify="JustifyContent.FlexStart" Spacing="3">
+                <FluentGridItem xs="12">
+                    <FluentSortableList @ref="_itemList" Items="@_currentTodoItems" OnUpdate="@SortList">
+                        <ItemTemplate>
                     
-                        <FluentCheckbox></FluentCheckbox>
-                        <InlineEditableText Mode="InlineEditableText.InputMode.TextField" Value="@context.Name"></InlineEditableText>
+                            <FluentCheckbox @bind-Value="@context.IsDone"></FluentCheckbox>
+                            <InlineEditableText Mode="InlineEditableText.InputMode.TextField" @bind-Value="@context.Text"></InlineEditableText>
 
-                    </ItemTemplate>
-                </FluentSortableList>
-            </FluentGridItem>
-        </FluentGrid>
+                        </ItemTemplate>
+                    </FluentSortableList>
+                </FluentGridItem>
+            </FluentGrid>   
+        }
+        else
+        {
+            <p>No todo selected</p>
+        }
 
     </FluentCard>
     
     <FluentGrid Justify="JustifyContent.FlexStart" Spacing="3" Style="width: 50%">
         <FluentGridItem xs="12">
-            <FluentSortableList Items="_items" OnUpdate="@SortList">
+            <FluentSortableList Items="_items" OnUpdate="@SortList" Selection="Selection">
                 <ItemTemplate>
-                    @context.Name
-                    <FluentSpacer />
-                    <FluentBadge Appearance="Appearance.Accent">New</FluentBadge>
-                    @DateOnly.FromDateTime(DateTime.Now)
+                    <FluentStack  Orientation="Orientation.Horizontal" onclick="@(() => SetCurrentTodo(@context))">
+                        @context.Title
+                        @if (context.Id == _currentTodo?.Id)
+                        {
+                            <FluentBadge Appearance="Appearance.Neutral">Current</FluentBadge>
+                        }
+                        <FluentSpacer/>
+                        <FluentBadge Appearance="Appearance.Accent">New</FluentBadge>
+                        @DateOnly.FromDateTime(DateTime.Now)
+                    </FluentStack>
                 </ItemTemplate>
             </FluentSortableList>
         </FluentGridItem>

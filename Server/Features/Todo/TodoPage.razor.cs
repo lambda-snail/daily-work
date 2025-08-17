@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.Options;
@@ -19,14 +20,25 @@ public class Item
 public partial class TodoPage : ComponentBase
 {
     private readonly TodoRepository _todoRepository;
-    private List<Item> _items = Enumerable.Range(1, 10).Select(i => new Item { Id = i, Name = $"Item {i}" }).ToList();
     
+    private List<Todo> _items = new();
+    private Todo? _currentTodo { get; set; } = null;
+    private List<TodoItem> _currentTodoItems { get; set; }  = Enumerable.Empty<TodoItem>().ToList();
+    
+    private FluentSortableList<TodoItem> _itemList;
 
     public TodoPage(TodoRepository todoRepository)
     {
         _todoRepository = todoRepository;
     }
-    
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        _items = await _todoRepository.GetTodos(1);
+        StateHasChanged();
+    }
+
     private void SortList(FluentSortableListEventArgs args)
     {
         if (args is null || args.OldIndex == args.NewIndex)
@@ -51,15 +63,35 @@ public partial class TodoPage : ComponentBase
         }
     }
 
+    private void SetCurrentTodo(Todo todo)
+    {
+        if (_currentTodo != todo)
+        {
+            _currentTodo = todo;
+            _currentTodoItems = todo.Items;
+            StateHasChanged();
+        }
+    }
+    
     private async Task AddTodo()
     {
         var todo = new Todo
         {
             Title = "New Todo",
             Description = "Describe your TODO here",
-            Owner = 1
+            Owner = 1,
+            Items = new List<TodoItem>()
+            {
+                new TodoItem
+                {
+                    IsDone = false,
+                    Text = "Do some task"
+                }
+            }
         };
         
-        await _todoRepository.CreateTodo(todo);
+        todo = await _todoRepository.CreateTodo(todo);
+        _items.Add(todo);
+        SetCurrentTodo(todo);
     }
 }

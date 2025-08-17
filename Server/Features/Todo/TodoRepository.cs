@@ -45,20 +45,54 @@ public class TodoRepository
             todo
         );
 
+        foreach (var item in todo.Items)
+        {
+            item.ParentTodo = todo.Id;
+        }
+        
         if (todo.Items.Count > 0)
         {
-            var result = await connection.QueryAsync<int>(
-                @"insert into TodoItem(IsDone, Text, ParentTodo) values (@IsDone, @Text, @ParentTodo); select cast(SCOPE_IDENTITY() as int)", 
+            await connection.ExecuteAsync(
+                @"insert into TodoItem(IsDone, Text, ParentTodo) values (@IsDone, @Text, @ParentTodo)", 
                 todo.Items
             );
-
-            int index = 0;
-            foreach (var id in result)
-            {
-                todo.Items[index++].Id = id;
-            }
         }
+        
+        var result = await connection.QueryAsync<Todo, TodoItem, Todo>(
+            @"select * from Todo 
+                    inner join TodoItem on TodoItem.ParentTodo = Todo.Id
+                    where Todo.Id = @Id;",
+            (t, i) =>
+            {
+                t.Items.Add(i);
+                return t;
+            }, 
+            new { Id = todo.Id });
+        
+        return result.First();
+    }
 
-        return todo;
+    public async Task<List<Todo>> GetTodos(int userId)
+    {
+        await using SqlConnection connection = new(_connectionString);
+        Dictionary<int, Todo> todos = new();
+        var result = await connection.QueryAsync<Todo, TodoItem, Todo>(
+            @"select * from Todo 
+                    inner join TodoItem on TodoItem.ParentTodo = Todo.Id
+                    where Todo.Owner = @Owner;",
+            (t, i) =>
+            {
+                if (!todos.TryGetValue(t.Id, out Todo? todo))
+                {
+                    todos.Add(t.Id, t);
+                    todo = t;
+                }
+                
+                todo.Items.Add(i);
+                return todo;
+            }, 
+            new { Owner = userId });
+
+        return todos.Values.ToList();
     }
 }
