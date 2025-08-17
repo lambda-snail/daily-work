@@ -50,11 +50,13 @@
         @if (CurrentTodo is not null)
         {
             <FluentStack Orientation="Orientation.Horizontal" HorizontalAlignment="HorizontalAlignment.SpaceBetween">
-                <h4>@CurrentTodo?.Title</h4>
+                <h4>
+                    <InlineEditableText ChangesSaved="() => _todoRepository.UpdateTodoNonCascading(CurrentTodo)" Mode="InlineEditableText.InputMode.TextField" @bind-Value="@CurrentTodo!.Title" />
+                </h4>
                 <FluentBadge Appearance="Appearance.Lightweight">@GetDateTimeDescriptionString(CurrentTodo!.LastUpdated)</FluentBadge>
             </FluentStack>
             
-            <p> <InlineEditableText Mode="InlineEditableText.InputMode.TextArea" @bind-Value="@CurrentTodo!.Description" ></InlineEditableText></p>
+            <p> <InlineEditableText ChangesSaved="() => _todoRepository.UpdateTodoNonCascading(CurrentTodo)" Mode="InlineEditableText.InputMode.TextArea" @bind-Value="@CurrentTodo!.Description" /> </p>
             
             <FluentGrid Justify="JustifyContent.FlexStart" Spacing="3">
                 <FluentGridItem xs="12">

@@ -127,4 +127,18 @@ public class TodoRepository
 
         return todos.Values.ToList();
     }
+
+    /// <summary>
+    /// Updates a todo but does not propagate the update to the items.
+    /// </summary>
+    public async Task UpdateTodoNonCascading(Todo todo)
+    {
+        await using SqlConnection connection = new(_connectionString);
+        
+        todo.LastUpdated = DateTime.Now;
+        await connection.ExecuteAsync(
+            @"update Todo set Title = @Title, Description = @Description, LastUpdated = @LastUpdated where Id = @Id", 
+            todo
+        );
+    }
 }
