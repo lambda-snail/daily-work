@@ -57,8 +57,12 @@
                     <FluentSortableList @ref="_itemList" Items="@_currentTodoItems" OnUpdate="@SortList">
                         <ItemTemplate>
                             <FluentStack @key="@context.Id" Orientation="Orientation.Horizontal">
-                                <FluentCheckbox @bind-Value="@context.IsDone"></FluentCheckbox>
-                                <InlineEditableText Mode="InlineEditableText.InputMode.TextField" @bind-Value="@context.Text"></InlineEditableText>
+                                <FluentCheckbox Value="@context.IsDone" ValueChanged="@(value => CheckboxValueChanged(value, context.Id))">
+                                    @* onchange="@(() => _todoRepository.UpdateTodoItem(@context))" *@
+                                    @* @bind-Value="@context.IsDone"> *@
+                                    
+                                </FluentCheckbox>
+                                <InlineEditableText ChangesSaved="@(() => _todoRepository.UpdateTodoItem(@context))" Mode="InlineEditableText.InputMode.TextField" @bind-Value="@context.Text"></InlineEditableText>
                             </FluentStack>
                         </ItemTemplate>
                     </FluentSortableList>

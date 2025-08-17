@@ -72,6 +72,29 @@ public class TodoRepository
         return result.First();
     }
 
+    public async Task UpdateTodoItem(TodoItem item)
+    {
+        await using SqlConnection connection = new(_connectionString);
+        
+        // For simplicity, we update everything - for now
+        await connection.ExecuteAsync(
+            @"update TodoItem set IsDone = @IsDone, Text = @Text where Id = @Id", 
+            new { Id = item.Id, IsDone = item.IsDone, Text = item.Text }
+        );
+    }
+    
+    public async Task<TodoItem> CreateTodoItem(TodoItem item)
+    {
+        await using SqlConnection connection = new(_connectionString);
+        
+        item.Id = await connection.QuerySingleAsync<int>(
+            @"insert into TodoItem(IsDone, Text, ParentTodo) values (@IsDone, @Text, @ParentTodo); select cast(SCOPE_IDENTITY() as int)", 
+            item
+        );
+
+        return item;
+    }
+
     public async Task<List<Todo>> GetTodos(int userId)
     {
         await using SqlConnection connection = new(_connectionString);

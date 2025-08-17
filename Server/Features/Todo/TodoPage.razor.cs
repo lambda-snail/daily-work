@@ -94,4 +94,16 @@ public partial class TodoPage : ComponentBase
         _items.Add(todo);
         SetCurrentTodo(todo);
     }
+
+    /// <summary>
+    /// Manual binding to checkbox for todo item so we can do more than just update the visuals
+    /// </summary>
+    private async Task CheckboxValueChanged(bool value, int itemId)
+    {
+        var item = _currentTodo?.Items.Where(i => i.Id == itemId)?.FirstOrDefault();
+        ArgumentNullException.ThrowIfNull(item);
+        
+        item.IsDone = value;
+        await _todoRepository.UpdateTodoItem(item);
+    }
 }

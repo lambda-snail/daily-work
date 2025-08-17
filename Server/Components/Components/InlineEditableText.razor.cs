@@ -7,6 +7,9 @@ using Server.Common;
 
 namespace Server.Components.Components;
 
+/// <summary>
+/// A container for text that turns into an editable field or area when double-clicked.
+/// </summary>
 [RenderModeInteractiveServer]
 public partial class InlineEditableText: ComponentBase
 {
@@ -37,7 +40,8 @@ public partial class InlineEditableText: ComponentBase
     
     private bool _editMode = false;
 
-    public event EventHandler<string> ChangesSaved;
+    //[Parameter] public event EventHandler<string> ChangesSaved { get; set; }
+    [Parameter] public EventCallback<string> ChangesSaved { get; set; }
     
     // protected override void OnInitialized()
     // {
@@ -77,7 +81,7 @@ public partial class InlineEditableText: ComponentBase
         _editMode = false;
         if (_originalValueWhenEditing != _value)
         {
-            ChangesSaved?.Invoke(this, Value);
+            ChangesSaved.InvokeAsync(Value);
         }
         
         StateHasChanged();
