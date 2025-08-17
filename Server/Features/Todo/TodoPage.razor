@@ -51,19 +51,19 @@
         {
             <h4>@_currentTodo?.Title</h4>
             <p> <InlineEditableText Mode="InlineEditableText.InputMode.TextArea" @bind-Value="@_currentTodo!.Description" ></InlineEditableText></p>
-
+            
             <FluentGrid Justify="JustifyContent.FlexStart" Spacing="3">
                 <FluentGridItem xs="12">
                     <FluentSortableList @ref="_itemList" Items="@_currentTodoItems" OnUpdate="@SortList">
                         <ItemTemplate>
-                    
-                            <FluentCheckbox @bind-Value="@context.IsDone"></FluentCheckbox>
-                            <InlineEditableText Mode="InlineEditableText.InputMode.TextField" @bind-Value="@context.Text"></InlineEditableText>
-
+                            <FluentStack @key="@context.Id" Orientation="Orientation.Horizontal">
+                                <FluentCheckbox @bind-Value="@context.IsDone"></FluentCheckbox>
+                                <InlineEditableText Mode="InlineEditableText.InputMode.TextField" @bind-Value="@context.Text"></InlineEditableText>
+                            </FluentStack>
                         </ItemTemplate>
                     </FluentSortableList>
                 </FluentGridItem>
-            </FluentGrid>   
+            </FluentGrid>
         }
         else
         {
