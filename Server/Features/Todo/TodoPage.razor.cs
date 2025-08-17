@@ -99,10 +99,12 @@ public partial class TodoPage : ComponentBase
     private async Task CheckboxValueChanged(bool value, int itemId)
     {
         var item = CurrentTodo?.Items.Where(i => i.Id == itemId)?.FirstOrDefault();
+     
+        ArgumentNullException.ThrowIfNull(CurrentTodo);
         ArgumentNullException.ThrowIfNull(item);
         
         item.IsDone = value;
-        await _todoRepository.UpdateTodoItem(item);
+        await _todoRepository.UpdateTodoItem(item, CurrentTodo);
     }
 
     private async Task AddItemToCurrentTodo()

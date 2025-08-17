@@ -19,6 +19,9 @@ public class Todo
     public required string Title { get; set; }
     public required string Description { get; set; }
 
+    public DateOnly Date { get; set; }
+    public DateTime LastUpdated { get; set; }
+    
     public int Owner { get; set; }
     
     public List<TodoItem> Items { get; set; } = new();
@@ -72,7 +75,7 @@ public class TodoRepository
         return result.First();
     }
 
-    public async Task UpdateTodoItem(TodoItem item)
+    public async Task UpdateTodoItem(TodoItem item, Todo todo)
     {
         await using SqlConnection connection = new(_connectionString);
         
@@ -80,6 +83,12 @@ public class TodoRepository
         await connection.ExecuteAsync(
             @"update TodoItem set IsDone = @IsDone, Text = @Text where Id = @Id", 
             new { Id = item.Id, IsDone = item.IsDone, Text = item.Text }
+        );
+        
+        todo.LastUpdated = DateTime.Now;
+        await connection.ExecuteAsync(
+            @"update Todo set LastUpdated = @LastUpdated where Id = @Id", 
+            todo
         );
     }
     
