@@ -23,10 +23,15 @@
     </FluentButton>
  
     <FluentDatePicker slot="end" Label="" AriaLabel="To" Value="@(_todoDate.ToDateTime())" ValueChanged="OnDateFilterChanged" View="CalendarViews.Months" DoubleClickToDate="DateTime.Today" Style="margin-right:0.5rem" />
-    <FluentTextField slot="end" Placeholder="Search"></FluentTextField>
+    @* <FluentTextField slot="end" Placeholder="Search"></FluentTextField> *@
+    <FluentSearch slot="end" 
+                  @bind-Value="@_todoSearchTitle"
+                  @bind-Value:after="@OnSearch"
+                  Immediate="true"
+                  ImmediateDelay="0"
+                  Placeholder="Search Todo" />
     <FluentIcon slot="end" Value="@(new Microsoft.FluentUI.AspNetCore.Components.Icons.Regular.Size20.Globe())"
         Icon="@(Microsoft.FluentUI.AspNetCore.Components.Icons.Regular.Size20.Globe)" />
-    
     
     @* <FluentRadioGroup @bind-Value=value1> *@
     @*     <FluentRadio Value=@("one") Checked="true">One</FluentRadio> *@
@@ -64,7 +69,7 @@
             
             <FluentGrid Justify="JustifyContent.FlexStart" Spacing="3">
                 <FluentGridItem xs="12">
-                    <FluentSortableList @ref="_itemList" Items="@CurrentTodo!.Items" OnUpdate="@SortList">
+                    <FluentSortableList Items="@CurrentTodo!.Items" OnUpdate="@SortList">
                         <ItemTemplate>
                             <FluentStack @key="@context.Id" Orientation="Orientation.Horizontal">
                                 <FluentCheckbox Value="@context.IsDone" ValueChanged="@(value => CheckboxValueChanged(value, context.Id))" />
@@ -93,7 +98,11 @@
             <FluentSortableList Items="_items" OnUpdate="@SortList" Selection="Selection">
                 <ItemTemplate>
                     <FluentStack Style="padding:0.5rem" Orientation="Orientation.Horizontal" onclick="@(() => SetCurrentTodo(@context))">
-                        @context.Title
+                        
+                        <FluentHighlighter HighlightedText="@_todoSearchTitle"
+                                           Delimiters=" ,;"
+                                           Text="@context.Title" />
+                        
                         @if (context.Id == CurrentTodo?.Id)
                         {
                             <FluentBadge Appearance="Appearance.Neutral">Current</FluentBadge>

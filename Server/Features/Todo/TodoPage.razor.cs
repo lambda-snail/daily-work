@@ -22,11 +22,11 @@ public partial class TodoPage : ComponentBase
     private readonly TodoRepository _todoRepository;
     
     private List<Todo> _items = new();
+    private List<Todo> _originalItems = new();
+    
     private Todo? CurrentTodo { get; set; } = null;
-    
-    private FluentSortableList<TodoItem> _itemList;
-    
-    private DateOnly _todoDate = DateOnly.FromDateTime(DateTime.Today);
+    private DateOnly _todoDate;
+    private string? _todoSearchTitle = "";
 
     public TodoPage(TodoRepository todoRepository)
     {
@@ -36,7 +36,7 @@ public partial class TodoPage : ComponentBase
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        _items = await _todoRepository.GetTodosForUser(1, _todoDate);
+        await OnDateFilterChanged(DateTime.Today);
         StateHasChanged();
     }
 
@@ -134,7 +134,7 @@ public partial class TodoPage : ComponentBase
             { TotalMinutes: >= 30 and < 90 } => $"about an hour ago",
             { TotalHours: < 6 } => $"{(int)timePassed.TotalHours} hours ago",
             { TotalDays: 1 } => $"one day ago",
-            { TotalDays: < 7 } => $"{(int)timePassed.TotalDays} days ago",
+            { TotalDays: >1 and < 7 } => $"{(int)timePassed.TotalDays} days ago",
             _ => dt.ToString("yyyy-MM-dd HH:mm")
         };
     }
@@ -159,7 +159,22 @@ public partial class TodoPage : ComponentBase
         
         _todoDate = e.ToDateOnly();
         _items = await _todoRepository.GetTodosForUser(1, _todoDate);
+        _originalItems = _items;
         CurrentTodo = _items.FirstOrDefault();
+        StateHasChanged();
+    }
+
+    private void OnSearch()
+    {
+        if (string.IsNullOrWhiteSpace(_todoSearchTitle))
+        {
+            _items = _originalItems;
+        }
+        else
+        {
+            _items = _originalItems.Where(i => i.Title.Contains(_todoSearchTitle)).ToList();
+        }
+        
         StateHasChanged();
     }
 }
