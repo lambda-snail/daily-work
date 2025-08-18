@@ -104,7 +104,7 @@ public class TodoRepository
         return item;
     }
 
-    public async Task<List<Todo>> GetTodos(int userId)
+    public async Task<List<Todo>> GetTodosForUser(int userId)
     {
         await using SqlConnection connection = new(_connectionString);
         Dictionary<int, Todo> todos = new();
@@ -124,6 +124,30 @@ public class TodoRepository
                 return todo;
             }, 
             new { Owner = userId });
+
+        return todos.Values.ToList();
+    }
+    
+    public async Task<List<Todo>> GetTodosForUser(int userId, DateOnly yearMonthFilter)
+    {
+        await using SqlConnection connection = new(_connectionString);
+        Dictionary<int, Todo> todos = new();
+        var result = await connection.QueryAsync<Todo, TodoItem, Todo>(
+            @"select * from Todo 
+                    inner join TodoItem on TodoItem.ParentTodo = Todo.Id
+                    where Todo.Owner = @Owner and YEAR(Todo.Date) = @Year and MONTH(Todo.Date) = @Month",
+            (t, i) =>
+            {
+                if (!todos.TryGetValue(t.Id, out Todo? todo))
+                {
+                    todos.Add(t.Id, t);
+                    todo = t;
+                }
+                
+                todo.Items.Add(i);
+                return todo;
+            }, 
+            new { Owner = userId, Year =  yearMonthFilter.Year, Month = yearMonthFilter.Month });
 
         return todos.Values.ToList();
     }

@@ -1,6 +1,7 @@
 @page "/todos"
 
 @using Microsoft.FluentUI.AspNetCore.Components
+@using Microsoft.FluentUI.AspNetCore.Components.Extensions
 @using Microsoft.FluentUI.AspNetCore.Components.Icons.Filled
 @using Server.Components.Components
 
@@ -20,7 +21,8 @@
         IconStart="@(new Microsoft.FluentUI.AspNetCore.Components.Icons.Regular.Size20.Delete())">
         Remove
     </FluentButton>
-    
+ 
+    <FluentDatePicker slot="end" Label="" AriaLabel="To" Value="@(_todoDate.ToDateTime())" ValueChanged="OnDateFilterChanged" View="CalendarViews.Months" DoubleClickToDate="DateTime.Today" Style="margin-right:0.5rem" />
     <FluentTextField slot="end" Placeholder="Search"></FluentTextField>
     <FluentIcon slot="end" Value="@(new Microsoft.FluentUI.AspNetCore.Components.Icons.Regular.Size20.Globe())"
         Icon="@(Microsoft.FluentUI.AspNetCore.Components.Icons.Regular.Size20.Globe)" />

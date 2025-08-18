@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.Options;
 using Microsoft.FluentUI.AspNetCore.Components;
+using Microsoft.FluentUI.AspNetCore.Components.Extensions;
 using Server.Common;
 using Server.Common.Settings;
 
@@ -24,6 +25,8 @@ public partial class TodoPage : ComponentBase
     private Todo? CurrentTodo { get; set; } = null;
     
     private FluentSortableList<TodoItem> _itemList;
+    
+    private DateOnly _todoDate = DateOnly.FromDateTime(DateTime.Today);
 
     public TodoPage(TodoRepository todoRepository)
     {
@@ -33,7 +36,7 @@ public partial class TodoPage : ComponentBase
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        _items = await _todoRepository.GetTodos(1);
+        _items = await _todoRepository.GetTodosForUser(1, _todoDate);
         StateHasChanged();
     }
 
@@ -144,6 +147,19 @@ public partial class TodoPage : ComponentBase
         _items.Remove(CurrentTodo);
         CurrentTodo = _items.FirstOrDefault();
         
+        StateHasChanged();
+    }
+
+    private async Task OnDateFilterChanged(DateTime? e)
+    {
+        if (e is null)
+        {
+            return;
+        }
+        
+        _todoDate = e.ToDateOnly();
+        _items = await _todoRepository.GetTodosForUser(1, _todoDate);
+        CurrentTodo = _items.FirstOrDefault();
         StateHasChanged();
     }
 }
