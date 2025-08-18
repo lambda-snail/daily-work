@@ -135,4 +135,15 @@ public partial class TodoPage : ComponentBase
             _ => dt.ToString("yyyy-MM-dd HH:mm")
         };
     }
+
+    private async Task DeleteCurrentTodo()
+    {
+        ArgumentNullException.ThrowIfNull(CurrentTodo);
+        
+        await _todoRepository.DeleteTodo(CurrentTodo);
+        _items.Remove(CurrentTodo);
+        CurrentTodo = _items.FirstOrDefault();
+        
+        StateHasChanged();
+    }
 }

@@ -15,6 +15,8 @@
     
     <FluentButton
         Appearance="Appearance.Lightweight"
+        Disabled="@(CurrentTodo == null)"
+        OnClick="DeleteCurrentTodo"
         IconStart="@(new Microsoft.FluentUI.AspNetCore.Components.Icons.Regular.Size20.Delete())">
         Remove
     </FluentButton>

@@ -141,4 +141,15 @@ public class TodoRepository
             todo
         );
     }
+
+    public async Task DeleteTodo(Todo todo)
+    {
+        await using SqlConnection connection = new(_connectionString);
+        
+        // Cascading rules will ensure items are deleted as well
+        await connection.ExecuteAsync(
+            @"delete from [Todo] where Id = @Id",
+            todo
+        );
+    }
 }
