@@ -4,7 +4,7 @@
 @using Microsoft.FluentUI.AspNetCore.Components.Icons.Filled
 @using Server.Components.Components
 
-<FluentToolbar id="todo-toolbar" Style="width: 100%">
+<FluentToolbar id="todo-toolbar" Style="width: 100%; margin-bottom: 1rem; padding: 1rem">
     <label slot="label">Manage Todos</label>
     <FluentButton
         Appearance="Appearance.Accent"
@@ -90,7 +90,7 @@
         <FluentGridItem xs="12">
             <FluentSortableList Items="_items" OnUpdate="@SortList" Selection="Selection">
                 <ItemTemplate>
-                    <FluentStack  Orientation="Orientation.Horizontal" onclick="@(() => SetCurrentTodo(@context))">
+                    <FluentStack Style="padding:0.5rem" Orientation="Orientation.Horizontal" onclick="@(() => SetCurrentTodo(@context))">
                         @context.Title
                         @if (context.Id == CurrentTodo?.Id)
                         {
