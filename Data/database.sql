@@ -18,7 +18,7 @@ create table [Todo] (
     Owner int not null,
     Date date not null default GETDATE(),
     LastUpdated datetime not null default CURRENT_TIMESTAMP,
-    constraint FK_Owner foreign key ([Owner]) references [User]([UserId])
+    constraint FK_Owner foreign key ([Owner]) references [User]([UserId]) on delete cascade
     );
 
 create table TodoItem (
@@ -26,5 +26,5 @@ create table TodoItem (
     IsDone bit not null,
     Text nvarchar(256) not null,
     ParentTodo int not null,
-    constraint FK_ParentTodo foreign key ([ParentTodo]) references [Todo]([Id])
+    constraint FK_ParentTodo foreign key ([ParentTodo]) references [Todo]([Id]) on delete cascade
 );
