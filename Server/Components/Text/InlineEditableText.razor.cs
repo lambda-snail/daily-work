@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.FluentUI.AspNetCore.Components;
 using Server.Common;
 
-namespace Server.Components.Components;
+namespace Server.Components.Text;
 
 /// <summary>
 /// A container for text that turns into an editable field or area when double-clicked.
