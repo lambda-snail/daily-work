@@ -1,7 +1,24 @@
 ﻿@page "/"
 
-<PageTitle>Home</PageTitle>
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthStateProvider
 
-<h1>Hello, world!</h1>
+<PageTitle>Signed in</PageTitle>
 
-Welcome to your new Fluent Blazor app.
+<p>You have been signed in!</p>
+
+@code {
+    private ClaimsPrincipal user;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        user = authState.User;
+        
+        // TODO: Check db for user information and create of not existing
+        // uid - userid
+        // name - name
+        // preferred_username - email
+    }
+}
