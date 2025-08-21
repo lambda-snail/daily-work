@@ -1,24 +1,20 @@
 ﻿@page "/"
 
-@using System.Security.Claims
-@using Microsoft.AspNetCore.Components.Authorization
-@inject AuthenticationStateProvider AuthStateProvider
+@using Server.Features.User
 
 <PageTitle>Signed in</PageTitle>
 
-<p>You have been signed in!</p>
+<p>You have been signed in, @_user?.DisplayName!</p>
 
 @code {
-    private ClaimsPrincipal user;
+    private ApplicationUser _user;
+    [CascadingParameter(Name = "SessionUserTask")] public Task<ApplicationUser>? SessionUserTask { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
-        user = authState.User;
-        
-        // TODO: Check db for user information and create of not existing
-        // uid - userid
-        // name - name
-        // preferred_username - email
+        if (SessionUserTask is not null)
+        {
+            _user = await SessionUserTask;            
+        }
     }
 }

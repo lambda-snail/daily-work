@@ -1,85 +1,94 @@
 ﻿@using Microsoft.AspNetCore.Components.Authorization
+@using Server.Features.User
 
 @inherits LayoutComponentBase
 
-<FluentDesignTheme @bind-Mode="@Mode" OfficeColor="OfficeColor.Office" />
+<FluentDesignTheme @bind-Mode="@Mode" OfficeColor="OfficeColor.Office"/>
 
 <FluentLayout>
-    
+
     <AuthorizeView>
         <Authorized>
-    
-            <FluentHeader>
-                <FluentStack Orientation="Orientation.Horizontal" HorizontalAlignment="HorizontalAlignment.SpaceBetween">
-                    Daily Work
-                    
-                    <AuthorizeView>
-                        <Authorized Context="auth_context">
-                            
-                            @{
-                                var name = auth_context.User.Claims.FirstOrDefault(c => c.Type == "name")?.Value;
-                            }
-                            
-                            <FluentProfileMenu FullName="@name" Style="padding: 4px;" TopCorner="true">
-                                <StartTemplate>
 
-                                </StartTemplate>
-                                <HeaderTemplate>
-                                    <a class="btn btn-sm btn-secondary" href="/MicrosoftIdentity/Account/SignOut" style="text-decoration:none;">
-                                        <span class="oi oi-account-logout" aria-hidden="true"></span>
-                                        Logout
-                                    </a>
-                                </HeaderTemplate>
-                                <ChildContent>
-                                    <div style="width: 250px; height: 80px">
-                                        <FluentLabel Typo="@Typography.Header" Style="font-weight: bold;">@name</FluentLabel>
-                                        <FluentLabel>@auth_context.User.Identity?.Name</FluentLabel>
-                                    </div>
-                                </ChildContent>
-                                <FooterTemplate>
-                                    <FluentStack>
-                                        <FluentSpacer/>
-                                        <FluentAnchor Appearance="@Appearance.Hypertext"
-                                                      Href="https://contoso.com"
-                                                      Target="_blank">About</FluentAnchor>
-                                    </FluentStack>
-                                </FooterTemplate>
-                            </FluentProfileMenu>
-                        </Authorized>
-                        <NotAuthorized Context="auth_context">
-                            <a class="btn btn-sm btn-secondary" href="/MicrosoftIdentity/Account/SignIn" style="text-decoration:none;">
-                                <span class="oi oi-account-login" aria-hidden="true"></span>
-                                Login
-                            </a>
-                        </NotAuthorized>
-                    </AuthorizeView>
-                   
+            <CascadingValue Name="SessionUserTask" TValue="Task<ApplicationUser>" Value="@UserManager.GetOrCreateCurrentUser(context.User)">
 
+                <FluentHeader>
+                    <FluentStack Orientation="Orientation.Horizontal"
+                                 HorizontalAlignment="HorizontalAlignment.SpaceBetween">
+                        Daily Work
+
+                        <AuthorizeView>
+                            <Authorized Context="auth_context">
+
+                                @{
+                                    var name = auth_context.User.Claims.FirstOrDefault(c => c.Type == "name")?.Value;
+                                }
+
+                                <FluentProfileMenu FullName="@name" Style="padding: 4px;" TopCorner="true">
+                                    <StartTemplate>
+
+                                    </StartTemplate>
+                                    <HeaderTemplate>
+                                        <a class="btn btn-sm btn-secondary" href="/MicrosoftIdentity/Account/SignOut"
+                                           style="text-decoration:none;">
+                                            <span class="oi oi-account-logout" aria-hidden="true"></span>
+                                            Logout
+                                        </a>
+                                    </HeaderTemplate>
+                                    <ChildContent>
+                                        <div style="width: 250px; height: 80px">
+                                            <FluentLabel Typo="@Typography.Header"
+                                                         Style="font-weight: bold;">@name</FluentLabel>
+                                            <FluentLabel>@auth_context.User.Identity?.Name</FluentLabel>
+                                        </div>
+                                    </ChildContent>
+                                    <FooterTemplate>
+                                        <FluentStack>
+                                            <FluentSpacer/>
+                                            <FluentAnchor Appearance="@Appearance.Hypertext"
+                                                          Href="https://contoso.com"
+                                                          Target="_blank">About
+                                            </FluentAnchor>
+                                        </FluentStack>
+                                    </FooterTemplate>
+                                </FluentProfileMenu>
+                            </Authorized>
+                            <NotAuthorized Context="auth_context">
+                                <a class="btn btn-sm btn-secondary" href="/MicrosoftIdentity/Account/SignIn"
+                                   style="text-decoration:none;">
+                                    <span class="oi oi-account-login" aria-hidden="true"></span>
+                                    Login
+                                </a>
+                            </NotAuthorized>
+                        </AuthorizeView>
+
+
+                    </FluentStack>
+                </FluentHeader>
+                <FluentStack Class="main" Orientation="Orientation.Horizontal" Width="100%">
+                    <NavMenu/>
+                    <FluentBodyContent Class="body-content">
+
+                        <div class="content">
+                            @Body
+                        </div>
+                        <FluentToastProvider MaxToastCount="10"/>
+                        <FluentDialogProvider/>
+                        <FluentTooltipProvider/>
+                        <FluentMessageBarProvider Section="MESSAGES_TOP"/>
+                        <FluentMenuProvider/>
+
+                    </FluentBodyContent>
                 </FluentStack>
-            </FluentHeader>
-            <FluentStack Class="main" Orientation="Orientation.Horizontal" Width="100%">
-                <NavMenu/>
-                <FluentBodyContent Class="body-content">
-
-                    <div class="content">
-                        @Body
-                    </div>
-                    <FluentToastProvider MaxToastCount="10"/>
-                    <FluentDialogProvider/>
-                    <FluentTooltipProvider/>
-                    <FluentMessageBarProvider Section="MESSAGES_TOP"/>
-                    <FluentMenuProvider/>
-
-                </FluentBodyContent>
-            </FluentStack>
+            </CascadingValue>
         </Authorized>
         <NotAuthorized>
-            
+
             <LoginDisplay/>
-            
+
         </NotAuthorized>
     </AuthorizeView>
-    
+
     <FluentFooter>
         <a href="https://www.fluentui-blazor.net" target="_blank">Documentation and demos</a>
         <FluentSpacer/>
@@ -94,6 +103,8 @@
 </div>
 
 @code {
+
+    [Inject] public UserManager UserManager { get; set; }
 
     public DesignThemeModes Mode { get; set; } = DesignThemeModes.Dark;
 
