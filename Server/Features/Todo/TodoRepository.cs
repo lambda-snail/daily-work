@@ -2,30 +2,9 @@ using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Options;
 using Server.Common.Settings;
+using Server.Features.User;
 
 namespace Server.Features.Todo;
-
-public class TodoItem
-{
-    public int Id { get; set; }
-    public bool IsDone { get; set; } = false;
-    public required string Text { get; set; }
-    public int ParentTodo { get; set; }
-}
-
-public class Todo
-{
-    public int Id { get; set; }
-    public required string Title { get; set; }
-    public required string Description { get; set; }
-
-    public DateOnly Date { get; set; }
-    public DateTime LastUpdated { get; set; }
-    
-    public int Owner { get; set; }
-    
-    public List<TodoItem> Items { get; set; } = new();
-}
 
 public class TodoRepository
 {
@@ -104,7 +83,7 @@ public class TodoRepository
         return item;
     }
 
-    public async Task<List<Todo>> GetTodosForUser(int userId)
+    public async Task<List<Todo>> GetTodosForUser(ApplicationUser user)
     {
         await using SqlConnection connection = new(_connectionString);
         Dictionary<int, Todo> todos = new();
@@ -123,12 +102,12 @@ public class TodoRepository
                 todo.Items.Add(i);
                 return todo;
             }, 
-            new { Owner = userId });
+            new { Owner = user.Id });
 
         return todos.Values.ToList();
     }
     
-    public async Task<List<Todo>> GetTodosForUser(int userId, DateOnly yearMonthFilter)
+    public async Task<List<Todo>> GetTodosForUser(ApplicationUser user, DateOnly yearMonthFilter)
     {
         await using SqlConnection connection = new(_connectionString);
         Dictionary<int, Todo> todos = new();
@@ -146,8 +125,8 @@ public class TodoRepository
                 
                 todo.Items.Add(i);
                 return todo;
-            }, 
-            new { Owner = userId, Year =  yearMonthFilter.Year, Month = yearMonthFilter.Month });
+            },
+            new { Owner = user.Id, Year =  yearMonthFilter.Year, Month = yearMonthFilter.Month });
 
         return todos.Values.ToList();
     }

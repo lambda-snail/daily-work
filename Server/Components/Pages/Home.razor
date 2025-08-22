@@ -1,7 +1,20 @@
 ﻿@page "/"
 
-<PageTitle>Home</PageTitle>
+@using Server.Features.User
 
-<h1>Hello, world!</h1>
+<PageTitle>Signed in</PageTitle>
 
-Welcome to your new Fluent Blazor app.
+<p>You have been signed in, @_user?.DisplayName!</p>
+
+@code {
+    private ApplicationUser _user;
+    [CascadingParameter(Name = "SessionUserTask")] public Task<ApplicationUser>? SessionUserTask { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (SessionUserTask is not null)
+        {
+            _user = await SessionUserTask;            
+        }
+    }
+}
