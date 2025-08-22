@@ -2,6 +2,7 @@ using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Options;
 using Server.Common.Settings;
+using Server.Features.User;
 
 namespace Server.Features.Todo;
 
@@ -82,7 +83,7 @@ public class TodoRepository
         return item;
     }
 
-    public async Task<List<Todo>> GetTodosForUser(int userId)
+    public async Task<List<Todo>> GetTodosForUser(ApplicationUser user)
     {
         await using SqlConnection connection = new(_connectionString);
         Dictionary<int, Todo> todos = new();
@@ -101,12 +102,12 @@ public class TodoRepository
                 todo.Items.Add(i);
                 return todo;
             }, 
-            new { Owner = userId });
+            new { Owner = user.Id });
 
         return todos.Values.ToList();
     }
     
-    public async Task<List<Todo>> GetTodosForUser(int userId, DateOnly yearMonthFilter)
+    public async Task<List<Todo>> GetTodosForUser(ApplicationUser user, DateOnly yearMonthFilter)
     {
         await using SqlConnection connection = new(_connectionString);
         Dictionary<int, Todo> todos = new();
@@ -124,8 +125,8 @@ public class TodoRepository
                 
                 todo.Items.Add(i);
                 return todo;
-            }, 
-            new { Owner = userId, Year =  yearMonthFilter.Year, Month = yearMonthFilter.Month });
+            },
+            new { Owner = user.Id, Year =  yearMonthFilter.Year, Month = yearMonthFilter.Month });
 
         return todos.Values.ToList();
     }

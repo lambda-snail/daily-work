@@ -6,6 +6,7 @@ using Microsoft.FluentUI.AspNetCore.Components;
 using Microsoft.FluentUI.AspNetCore.Components.Extensions;
 using Server.Common;
 using Server.Common.Settings;
+using Server.Features.User;
 
 namespace Server.Features.Todo;
 
@@ -27,16 +28,25 @@ public partial class TodoPage : ComponentBase
     private Todo? CurrentTodo { get; set; } = null;
     private DateOnly _todoDate;
     private string? _todoSearchTitle = "";
+    
+    private ApplicationUser _user;
+    [CascadingParameter(Name = "SessionUserTask")] public Task<ApplicationUser>? SessionUserTask { get; set; }
 
     public TodoPage(TodoRepository todoRepository)
     {
         _todoRepository = todoRepository;
     }
-
+    
     protected override async Task OnInitializedAsync()
     {
-        await base.OnInitializedAsync();
+        if (SessionUserTask is not null)
+        {
+            _user = await SessionUserTask;            
+        }
+     
         await OnDateFilterChanged(DateTime.Today);
+        
+        await base.OnInitializedAsync();
         StateHasChanged();
     }
 
@@ -79,7 +89,7 @@ public partial class TodoPage : ComponentBase
         {
             Title = "New Todo",
             Description = "Describe your TODO here",
-            Owner = 1,
+            Owner = _user.Id,
             Items = new List<TodoItem>()
             {
                 new TodoItem
@@ -116,7 +126,7 @@ public partial class TodoPage : ComponentBase
         var item = new TodoItem
         {
             Text = "Describe your task or goal",
-            ParentTodo = CurrentTodo.Id
+            ParentTodo = CurrentTodo.Id,
         };
         
         item = await _todoRepository.CreateTodoItem(item);
@@ -158,7 +168,7 @@ public partial class TodoPage : ComponentBase
         }
         
         _todoDate = e.ToDateOnly();
-        _items = await _todoRepository.GetTodosForUser(1, _todoDate);
+        _items = await _todoRepository.GetTodosForUser(_user, _todoDate);
         _originalItems = _items;
         CurrentTodo = _items.FirstOrDefault();
         StateHasChanged();

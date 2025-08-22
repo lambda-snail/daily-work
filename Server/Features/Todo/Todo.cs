@@ -9,7 +9,7 @@ public class Todo
     public DateOnly Date { get; set; }
     public DateTime LastUpdated { get; set; }
     
-    public int Owner { get; set; }
+    public required Guid Owner { get; set; }
     
     public List<TodoItem> Items { get; set; } = new();
 }
