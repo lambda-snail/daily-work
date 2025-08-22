@@ -6,7 +6,16 @@
     <nav class="sitenav" aria-labelledby="main-menu">
         <FluentNavMenu Id="main-menu" Collapsible="true" Width="250" Title="Navigation menu" @bind-Expanded="expanded" CustomToggle="true">
             <FluentNavLink Href="/" Match="NavLinkMatch.All" Icon="@(new Icons.Regular.Size20.Home())" IconColor="Color.Accent">Home</FluentNavLink>
-            <FluentNavLink Href="todos" Icon="@(new Icons.Regular.Size20.AppsList())" IconColor="Color.Accent">Todos</FluentNavLink>
+            <FluentNavLink Href="todos" Icon="@(new Icons.Regular.Size20.AppsList())" IconColor="Color.Accent">Todo</FluentNavLink>
+            
+            <FluentNavLink Href="/" Icon="@(new Icons.Regular.Size20.Bookmark())" IconColor="Color.Accent">Bookmarks (Coming Soon)</FluentNavLink>
+            <FluentNavLink Href="/" Icon="@(new Icons.Regular.Size20.CalligraphyPen())" IconColor="Color.Accent">Journal (Coming Soon)</FluentNavLink>
+            <FluentNavLink Href="/" Icon="@(new Icons.Regular.Size20.DocumentBulletListMultiple())" IconColor="Color.Accent">Wiki (Coming Soon)</FluentNavLink>
+            
+            
+            <FluentNavLink Href="/" Icon="@(new Icons.Regular.Size20.PersonSettings())" IconColor="Color.Accent">Settings</FluentNavLink>
+            
+            
         </FluentNavMenu>
     </nav>
 </div>
