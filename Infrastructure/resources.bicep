@@ -76,6 +76,7 @@ resource webApp 'Microsoft.Web/sites@2024-04-01' = {
         AzureWebJobsStorage__credential : 'managedidentity'
         AzureWebJobsStorage__clientId: identity.properties.clientId
         ClientId: identity.properties.clientId
+        ASPNETCORE_ENVIRONMENT: 'Production'
         //AppConfigurationEndpoint: app
         //APPINSIGHTS_INSTRUMENTATIONKEY: applicationInsights.properties.InstrumentationKey
         //APPLICATIONINSIGHTS_AUTHENTICATION_STRING: 'ClientId=${identity.properties.clientId};Authorization=AAD'
