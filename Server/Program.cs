@@ -1,3 +1,4 @@
+using Azure.Core;
 using Azure.Identity;
 using Dapper;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
@@ -18,34 +19,29 @@ ArgumentNullException.ThrowIfNull(appConfigurationEndpoint);
 
 var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 
-// We avoid default azure credential to support Rider
-// TODO: Remove and use default azure credential when Rider supports it
+// Use connection string for now as managed identity seems to not work
+string? connectionString;
 if ("Development" == env)
 {
     var tempConfiguration = new ConfigurationBuilder()
-        //.AddJsonFile("appsettings.json")
         .AddUserSecrets<Program>()
         .Build();
 
-    var connectionString = tempConfiguration.GetSection("DevelopmentCredentials").GetValue<string>("AppConfigConnectionString");
-    builder.Configuration.AddAzureAppConfiguration(options =>
-            options
-                .Connect(connectionString)
-                .Select("Tasks:*", env)
-                .Select("AzureAd:*", env)
-    );
+    connectionString = tempConfiguration.GetSection("DevelopmentCredentials").GetValue<string>("AppConfigConnectionString");
 }
 else
 {
-     var credential = new ManagedIdentityCredential(Environment.GetEnvironmentVariable("ClientId"));
-     builder.Configuration.AddAzureAppConfiguration(options =>
-             options
-                 .Connect(new Uri(appConfigurationEndpoint), credential)
-                 .Select("Tasks:*", env)
-                 .Select("AzureAd:*", env)
-         //.ConfigureRefresh(refreshOptions => refreshOptions.SetCacheExpiration(TimeSpan.FromHours(refreshTimer ?? 24)))
-     );
+    connectionString = Environment.GetEnvironmentVariable("AppConfigConnectionString");
 }
+
+ArgumentNullException.ThrowIfNull(connectionString, "AppConfigConnectionString");
+builder.Configuration.AddAzureAppConfiguration(options =>
+        options
+            .Connect(connectionString)
+            .Select("Tasks:*", env)
+            .Select("AzureAd:*", env)
+    //.ConfigureRefresh(refreshOptions => refreshOptions.SetCacheExpiration(TimeSpan.FromHours(refreshTimer ?? 24)))
+);
 
 builder.Services.Configure<DatabaseSettings>(builder.Configuration.GetSection("Tasks:Database"));
 
