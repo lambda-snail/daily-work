@@ -120,9 +120,9 @@
                                      })"
                                      BackgroundColor="@(context.State switch
                                      {
-                                         TodoState.New => "gray",
+                                         TodoState.New => "var(--todo-new-color)",
                                          TodoState.InProgress => "var(--main-accent-color)",
-                                         TodoState.Done => "green",
+                                         TodoState.Done => "var(--todo-done-color)",
                                          _ => "gray"
                                      })"
                                      Fill="highlight">@context.State.ToString()</FluentBadge>

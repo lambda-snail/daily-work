@@ -2,6 +2,9 @@
 
 :root {
     --main-accent-color: blue;
+    
+    --todo-done-color: green;
+    --todo-new-color: gray;
 }
 
 body {
