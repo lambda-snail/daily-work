@@ -8,7 +8,7 @@
 @using Server.Components.Text
 
 <FluentToolbar id="todo-toolbar" Style="width: 100%; margin-bottom: 1rem; padding: 1rem">
-    <label slot="label">Manage Todos</label>
+    <FluentLabel Weight="FontWeight.Bold" slot="label" Style="margin-right: 1rem;">Manage Todos</FluentLabel>
     <FluentButton
         Appearance="Appearance.Accent"
         OnClick="AddTodo"
