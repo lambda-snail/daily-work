@@ -44,6 +44,6 @@ module resources './resources.bicep' = {
     identity: identity.outputs.identity
     identityResourceId: identity.outputs.identityResourceId
     appName: appName
-    appConfigEndpoint: common.outputs.appConfiguration
+    appConfigEndpoint: 'https://${common.outputs.appConfiguration.name}.azconfig.io'
   }
 }

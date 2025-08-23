@@ -77,7 +77,11 @@ resource webApp 'Microsoft.Web/sites@2024-04-01' = {
         AzureWebJobsStorage__clientId: identity.properties.clientId
         ClientId: identity.properties.clientId
         ASPNETCORE_ENVIRONMENT: 'Production'
-        //AppConfigurationEndpoint: app
+        AppConfigurationEndpoint: appConfigEndpoint
+        ASPNETCORE_HTTPS_PORT: '8080'
+        ASPNETCORE_URLS: 'https://*:8080;http://*:8081'
+        WEBSITE_HTTPLOGGING_RETENTION_DAYS: '7'
+        WEBSITES_PORT: '8081'
         //APPINSIGHTS_INSTRUMENTATIONKEY: applicationInsights.properties.InstrumentationKey
         //APPLICATIONINSIGHTS_AUTHENTICATION_STRING: 'ClientId=${identity.properties.clientId};Authorization=AAD'
       }
