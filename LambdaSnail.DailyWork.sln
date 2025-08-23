@@ -19,6 +19,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{7AE6B7D7-D828-46A2-B6D5-B13057B77CD1}"
 	ProjectSection(SolutionItems) = preProject
 		Data\database.sql = Data\database.sql
+		Data\add-db-permissions.sql = Data\add-db-permissions.sql
 	EndProjectSection
 EndProject
 Global
