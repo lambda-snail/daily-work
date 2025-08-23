@@ -116,6 +116,8 @@ public partial class TodoPage : ComponentBase
         ArgumentNullException.ThrowIfNull(item);
         
         item.IsDone = value;
+        CurrentTodo.EvaluateState();
+        
         await _todoRepository.UpdateTodoItem(item, CurrentTodo);
     }
 

@@ -58,17 +58,24 @@ public class TodoRepository
     {
         await using SqlConnection connection = new(_connectionString);
         
+        await connection.OpenAsync();
+        var transaction = await connection.BeginTransactionAsync();
+        
         // For simplicity, we update everything - for now
         await connection.ExecuteAsync(
             @"update TodoItem set IsDone = @IsDone, Text = @Text where Id = @Id", 
-            new { Id = item.Id, IsDone = item.IsDone, Text = item.Text }
+            new { Id = item.Id, IsDone = item.IsDone, Text = item.Text },
+            transaction
         );
         
         todo.LastUpdated = DateTime.Now;
         await connection.ExecuteAsync(
-            @"update Todo set LastUpdated = @LastUpdated where Id = @Id", 
-            todo
+            @"update Todo set LastUpdated = @LastUpdated, State = @State where Id = @Id", 
+            todo,
+            transaction
         );
+        
+        await transaction.CommitAsync();
     }
     
     public async Task<TodoItem> CreateTodoItem(TodoItem item)
@@ -140,7 +147,7 @@ public class TodoRepository
         
         todo.LastUpdated = DateTime.Now;
         await connection.ExecuteAsync(
-            @"update Todo set Title = @Title, Description = @Description, LastUpdated = @LastUpdated where Id = @Id", 
+            @"update Todo set Title = @Title, Description = @Description, LastUpdated = @LastUpdated, State = @State where Id = @Id", 
             todo
         );
     }

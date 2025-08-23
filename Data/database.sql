@@ -19,6 +19,7 @@ create table [Todo] (
     Id int identity(0,1) primary key,
     Title nvarchar(128) not null,
     Description nvarchar(4000) null,
+    State int not null default 0,
     Owner uniqueidentifier not null,
     Date date not null default GETDATE(),
     LastUpdated datetime not null default CURRENT_TIMESTAMP,

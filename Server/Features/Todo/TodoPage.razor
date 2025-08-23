@@ -110,7 +110,21 @@
                             <FluentBadge Appearance="Appearance.Neutral">Current</FluentBadge>
                         }
                         <FluentSpacer/>
-                        <FluentBadge Appearance="Appearance.Accent">New</FluentBadge>
+                        
+                        <FluentBadge Appearance="@(context.State switch
+                                     {
+                                         TodoState.New => Appearance.Accent,
+                                         TodoState.InProgress => Appearance.Neutral,
+                                         TodoState.Done => Appearance.Neutral
+                                     })"
+                                     BackgroundColor="@(context.State switch
+                                     {
+                                         TodoState.New => "gray",
+                                         TodoState.InProgress => "blue",
+                                         TodoState.Done => "green"
+                                     })"
+                                     Fill="highlight">@context.State.ToString()</FluentBadge>
+                        
                         @context.Date
                     </FluentStack>
                 </ItemTemplate>
