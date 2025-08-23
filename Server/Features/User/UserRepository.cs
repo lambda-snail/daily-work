@@ -32,7 +32,7 @@ public class UserRepository
         
         await using SqlConnection connection = new(_connectionString);
         await connection.ExecuteAsync(
-            @"insert into [User](ObjectId, Email, @DisplayName) values (@ObjectId, @Email, @DisplayName)", 
+            @"insert into [User](ObjectId, Email, DisplayName) values (@ObjectId, @Email, @DisplayName)", 
             user
         );
     }
