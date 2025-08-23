@@ -115,13 +115,15 @@
                                      {
                                          TodoState.New => Appearance.Accent,
                                          TodoState.InProgress => Appearance.Neutral,
-                                         TodoState.Done => Appearance.Neutral
+                                         TodoState.Done => Appearance.Neutral,
+                                         _ => Appearance.Neutral
                                      })"
                                      BackgroundColor="@(context.State switch
                                      {
                                          TodoState.New => "gray",
-                                         TodoState.InProgress => "blue",
-                                         TodoState.Done => "green"
+                                         TodoState.InProgress => "var(--main-accent-color)",
+                                         TodoState.Done => "green",
+                                         _ => "gray"
                                      })"
                                      Fill="highlight">@context.State.ToString()</FluentBadge>
                         
