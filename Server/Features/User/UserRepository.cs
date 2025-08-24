@@ -19,7 +19,7 @@ public class UserRepository
     public async Task<ApplicationUser?> GetByObjectId(Guid objectId)
     {
         await using SqlConnection connection = new(_connectionString);
-        var result = await connection.QueryAsync<ApplicationUser?>(@"select * from [User] where ObjectId = @ObjectId;", new { ObjectId = objectId });
+        var result = await connection.QueryAsync<ApplicationUser?>(@"select * from [User] where ObjectId = @ObjectId;", new { ObjectId = objectId }).ConfigureAwait(false);
         return result.FirstOrDefault();
     }
 
@@ -34,6 +34,6 @@ public class UserRepository
         await connection.ExecuteAsync(
             @"insert into [User](ObjectId, Email, DisplayName) values (@ObjectId, @Email, @DisplayName)", 
             user
-        );
+        ).ConfigureAwait(false);
     }
 }

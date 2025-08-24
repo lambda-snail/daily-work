@@ -25,7 +25,7 @@ public class TodoRepository
         todo.Id = await connection.QuerySingleAsync<int>(
             @"insert into Todo(Title, Description, Owner) values (@Title, @Description, @Owner); select cast(SCOPE_IDENTITY() as int)", 
             todo
-        );
+        ).ConfigureAwait(false);
 
         foreach (var item in todo.Items)
         {
@@ -37,7 +37,7 @@ public class TodoRepository
             await connection.ExecuteAsync(
                 @"insert into TodoItem(IsDone, Text, ParentTodo) values (@IsDone, @Text, @ParentTodo)", 
                 todo.Items
-            );
+            ).ConfigureAwait(false);
         }
         
         var result = await connection.QueryAsync<Todo, TodoItem, Todo>(
@@ -49,7 +49,7 @@ public class TodoRepository
                 t.Items.Add(i);
                 return t;
             }, 
-            new { Id = todo.Id });
+            new { Id = todo.Id }).ConfigureAwait(false);
         
         return result.First();
     }
@@ -58,24 +58,24 @@ public class TodoRepository
     {
         await using SqlConnection connection = new(_connectionString);
         
-        await connection.OpenAsync();
-        var transaction = await connection.BeginTransactionAsync();
+        await connection.OpenAsync().ConfigureAwait(false);
+        var transaction = await connection.BeginTransactionAsync().ConfigureAwait(false);
         
         // For simplicity, we update everything - for now
         await connection.ExecuteAsync(
             @"update TodoItem set IsDone = @IsDone, Text = @Text where Id = @Id", 
             new { Id = item.Id, IsDone = item.IsDone, Text = item.Text },
             transaction
-        );
+        ).ConfigureAwait(false);
         
         todo.LastUpdated = DateTime.Now;
         await connection.ExecuteAsync(
             @"update Todo set LastUpdated = @LastUpdated, State = @State where Id = @Id", 
             todo,
             transaction
-        );
+        ).ConfigureAwait(false);
         
-        await transaction.CommitAsync();
+        await transaction.CommitAsync().ConfigureAwait(false);
     }
     
     public async Task<TodoItem> CreateTodoItem(TodoItem item)
@@ -85,7 +85,7 @@ public class TodoRepository
         item.Id = await connection.QuerySingleAsync<int>(
             @"insert into TodoItem(IsDone, Text, ParentTodo) values (@IsDone, @Text, @ParentTodo); select cast(SCOPE_IDENTITY() as int)", 
             item
-        );
+        ).ConfigureAwait(false);
 
         return item;
     }
@@ -109,7 +109,7 @@ public class TodoRepository
                 todo.Items.Add(i);
                 return todo;
             }, 
-            new { Owner = user.Id });
+            new { Owner = user.Id }).ConfigureAwait(false);
 
         return todos.Values.ToList();
     }
