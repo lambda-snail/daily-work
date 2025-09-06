@@ -5,6 +5,7 @@ var commonRgName    = 'rg-ls-common'
 var prodRgName      = 'rg-ls-dailywork-prod'
 
 var appName = 'app-ls-dailywork-prod'
+var appConfigName = 'acfg-ls-common'
 
 resource commonRg 'Microsoft.Resources/resourceGroups@2024-11-01' = {
   name: commonRgName
@@ -28,7 +29,7 @@ module common './common.bicep' = {
   name: 'commonRgDeploy'
   scope: commonRg
   params: {
-    configStoreName: 'ac-ls-common'
+    configStoreName: appConfigName
     appServicePlanName: 'asp-ls-linux'
     appName: appName
     identity: identity.outputs.identity
@@ -44,6 +45,6 @@ module resources './resources.bicep' = {
     identity: identity.outputs.identity
     identityResourceId: identity.outputs.identityResourceId
     appName: appName
-    appConfigEndpoint: 'https://${common.outputs.appConfiguration.name}.azconfig.io'
+    appConfigEndpoint: 'https://${appConfigName}.azconfig.io'
   }
 }
