@@ -26,6 +26,9 @@
  
     <FluentDatePicker slot="end" Label="" AriaLabel="To" Value="@(_todoDate.ToDateTime())" ValueChanged="OnDateFilterChanged" View="CalendarViews.Months" DoubleClickToDate="DateTime.Today" Style="margin-right:0.5rem" />
     @* <FluentTextField slot="end" Placeholder="Search"></FluentTextField> *@
+    
+    <FluentSelect TOption="TodoState" />
+    
     <FluentSearch slot="end" 
                   @bind-Value="@_todoSearchTitle"
                   @bind-Value:after="@OnSearch"
