@@ -77,7 +77,7 @@ builder.Services.AddAuthorization(options =>
     // Uncomment below to apply:
 
     // options.FallbackPolicy = options.DefaultPolicy;
-
+    
     options.FallbackPolicy = null;
 });
 
@@ -123,6 +123,7 @@ app.UseAntiforgery();
 app.MapControllers();
 app.MapStaticAssets();
 app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode();
+    .AddInteractiveServerRenderMode()
+    .AllowAnonymous();
 
 app.Run();
