@@ -1,30 +1,16 @@
-@using Microsoft.AspNetCore.Components.Authorization
-@* <AuthorizeView> *@
-@*     <Authorized> *@
-@*         Hello, @context.User.Identity?.Name *@
-@*         <a class="btn btn-sm btn-secondary" href="/MicrosoftIdentity/Account/SignOut" style="text-decoration:none;"> *@
-@*             <span class="oi oi-account-logout" aria-hidden="true"></span> *@
-@*             Logout *@
-@*         </a> *@
-@*     </Authorized> *@
-@*     <NotAuthorized> *@
-@*         <a class="btn btn-sm btn-secondary" href="/MicrosoftIdentity/Account/SignIn" style="text-decoration:none;"> *@
-@*             <span class="oi oi-account-login" aria-hidden="true"></span> *@
-@*             Login *@
-@*         </a> *@
-@*     </NotAuthorized> *@
-@* </AuthorizeView> *@
 
 <FluentStack Orientation="Orientation.Vertical" HorizontalAlignment="HorizontalAlignment.Center">
 
-    <FluentCard Style="width:25%; height: 10rem;">
-        
-        @* <FluentLabel Typo="Typography.HeroTitle">Welcome to Daily Work</FluentLabel> *@
-        @* <FluentLabel Typo="Typography.PageTitle">The center for all your work tracking</FluentLabel> *@
+    <FluentCard Style="width:50%;margin:2rem;">
         
         <FluentStack Orientation="Orientation.Vertical"
                      HorizontalAlignment="HorizontalAlignment.Center"
                      VerticalAlignment="VerticalAlignment.Center">
+            
+            <FluentLabel Typo="Typography.HeroTitle">Welcome to Daily Work</FluentLabel>
+            <FluentLabel Typo="Typography.H4">The center for all your work tracking</FluentLabel>
+            
+            <FluentSpacer />
 
             <FluentButton
                 Style="width: 100%"
